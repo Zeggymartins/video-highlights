@@ -61,7 +61,7 @@ def process_video():
                 {"timestamp": f"{start:.2f}", "caption": "Engaging moment detected"}
                 for start, _ in key_moments
             ],
-            "highlight_clip_url": f"http://127.0.0.1:5001/files/highlights/{os.path.basename(highlight_clip)}"
+            "highlight_clip_url": f"{request.host_url}files/highlights/{os.path.basename(highlight_clip)}"
         }
 
         return jsonify(response)
@@ -82,5 +82,5 @@ def serve_files(filename):
     return jsonify({"error": "File not found"}), 404
 
 if __name__ == "__main__":
-    print("🚀 Server is running at http://127.0.0.1:5001")  # ✅ Logs startup message
-    app.run(host="0.0.0.0", port=5001, debug=True)
+   port = int(os.environ.get("PORT", 10000))  # Default to 10000
+   app.run(host="0.0.0.0", port=port)

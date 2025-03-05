@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Processing Demo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+        }
+        .form input {
+            padding: 10px;
+            font-size: 16px;
+            border: none;
+            border-radius: 2em;
+            box-shadow: 1px 1px 6px red;
+            width: 60%;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            margin-top: 10px;
+            cursor: pointer;
+            background: red;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+        #status {
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        #loader {
+            display: none;
+            width: 50px;
+            height: 50px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #3498db;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        video {
+            display: none;
+            width: 80%;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Video Processing Demo</h1>
+    <div class="form">
+        <input type="text" id="videoUrl" placeholder="Enter YouTube URL">
+    </div>
+    <button onclick="processVideo()">Process Video</button>
+
+    <div id="status"></div>
+    <div id="loader"></div>
+    <div style="display: flex ;justify-self: center;">
+
+        <h2>Highlight Video</h2>
+        <video id="highlightVideo" controls></video>
+    </div>
+
+    <script>
+        function processVideo() {
+            const videoUrl = document.getElementById("videoUrl").value;
+            if (!videoUrl) {
+                alert("Please enter a video URL!");
+                return;
+            }
+
+            document.getElementById("status").innerText = "Processing...";
+            document.getElementById("loader").style.display = "block";
+            document.getElementById("highlightVideo").style.display = "none";
+
+            fetch("http://localhost:5001/process", {  // ✅ Fixed API port
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ url: videoUrl })
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById("loader").style.display = "none";
+                if (data.error) {
+                    document.getElementById("status").innerText = "Error: " + data.error;
+                } else {
+                    document.getElementById("status").innerText = "Processing complete!";
+                    document.getElementById("highlightVideo").src = data.highlight_clip_url;
+                    document.getElementById("highlightVideo").style.display = "block";
+                }
+            })
+            .catch(error => {
+                document.getElementById("loader").style.display = "none";
+                document.getElementById("status").innerText = "Error processing video.";
+                console.error(error);
+            });
+        }
+    </script>
+
+</body>
+</html>

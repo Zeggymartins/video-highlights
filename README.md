@@ -86,21 +86,7 @@ It allows users to enter a video URL, process it, and watch the highlight video.
 
 ## 🚀 Deployment on Render
 
-1. **Push to GitHub**
-   ```bash
-   git add .
-   git commit -m "Initial commit"
-   git push origin main
-   ```
 
-2. **Connect GitHub to Render**
-   - Go to [Render](https://render.com/)
-   - Create a new Web Service
-   - Select your GitHub repository
-   - Set the start command: `python main.py`
-   - Deploy!
-
----
 
 ## 🎥 Example Output
 
